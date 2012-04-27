@@ -1,0 +1,100 @@
+# @@@LICENSE
+#
+#      Copyright (c) 2007-2012 Hewlett-Packard Development Company, L.P.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# LICENSE@@@
+
+
+# -*- mode: conf; -*-
+# powerd
+
+start on stopped finish
+
+# Stop when the Software Update tool is about to install an update.  The tool
+# uses upstart to restart jobs when the installation is complete.
+stop on started start_update
+
+respawn
+
+pre-start script
+    CONF_DIR="/var/preferences/com.palm.power"
+    CONF_FILE="${CONF_DIR}/powerd.conf"
+    DEFAULT_CONF_FILE="/etc/default/powerd.conf"
+    TMP_FILE="${CONF_DIR}/powerd.tmp"
+    if [ ! -f ${CONF_FILE} ]; then
+        mkdir -p ${CONF_DIR} || true
+        cp ${DEFAULT_CONF_FILE} ${TMP_FILE} || true
+        sync || true
+        mv ${TMP_FILE} ${CONF_FILE} || true
+    fi
+    if grep -qs "qemux86" /etc/hostname ; then
+        /sbin/modprobe -q rtc_cmos || true
+    fi 
+end script
+
+#console output
+
+script
+		if grep -qs "top" /proc/cmdline || grep -qs "opal" /proc/cmdline || grep -qs "sapp" /proc/cmdline ; then
+			# "Configure PM subsystem"
+			# The WFI mode sould be on by default and the following writes can by bypassed.
+			echo 1 > /sys/module/pm_8x60/modes/cpu0/wfi/idle_enabled
+			echo 1 > /sys/module/pm_8x60/modes/cpu0/wfi/suspend_enabled
+			echo 1 > /sys/module/pm_8x60/modes/cpu1/wfi/idle_enabled
+			echo 1 > /sys/module/pm_8x60/modes/cpu1/wfi/suspend_enabled
+
+			 # "Enable standalone power collapse"
+			echo 1 > /sys/module/pm_8x60/modes/cpu0/standalone_power_collapse/idle_enabled
+			echo 1 > /sys/module/pm_8x60/modes/cpu0/standalone_power_collapse/suspend_enabled
+			echo 1 > /sys/module/pm_8x60/modes/cpu1/standalone_power_collapse/idle_enabled
+			echo 1 > /sys/module/pm_8x60/modes/cpu1/standalone_power_collapse/suspend_enabled
+
+			# "Enable full power collapse"
+			echo 1 > /sys/module/pm_8x60/modes/cpu0/power_collapse/idle_enabled
+			echo 1 > /sys/module/pm_8x60/modes/cpu0/power_collapse/suspend_enabled
+			echo 1 > /sys/module/pm_8x60/modes/cpu1/power_collapse/idle_enabled
+			echo 1 > /sys/module/pm_8x60/modes/cpu1/power_collapse/suspend_enabled
+
+			 # "Configure rpm resources"
+			echo 0 > /sys/module/rpm_resources/enable_low_power/vdd_dig
+			echo 1 > /sys/module/rpm_resources/enable_low_power/vdd_mem
+			echo 1 > /sys/module/rpm_resources/enable_low_power/L2_cache
+			echo 1 > /sys/module/rpm_resources/enable_low_power/pxo
+			
+		fi
+
+        if grep -qs "qemux86" /etc/hostname ; then
+                # For emulator, provide battery status through
+                # fake sysfs entries
+                mkdir -p /tmp/powerd/fake/battery/32-00084048a7c8
+                cd /tmp/powerd/fake/battery/32-00084048a7c8
+                echo 99.21875 > getage
+                echo 85703 > getavgcurrent
+                echo 1140.875 > getcapacity
+                echo 748.800 > getcoulomb
+                echo 85703 > getcurrent
+                echo 1150.000 > getfull40
+                echo 66 > getpercent
+                echo 761.250 > getrawcoulomb
+                echo 20 > getrsense
+                echo 38 > gettemp
+                echo 3928400 > getvoltage
+                echo 32-00084048a7c8 > ../w1_master_slaves
+                echo 0 > ../w1_master_search
+                cd /tmp/powerd
+                exec /usr/sbin/powerd -b
+        fi
+        exec /usr/sbin/powerd
+end script
