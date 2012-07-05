@@ -465,5 +465,5 @@ error:
 	return 0;
 }
 
-INIT_FUNC(INIT_FUNC_MIDDLE, BatteryInit);
+INIT_FUNC(INIT_FUNC_FIRST, BatteryInit);
 

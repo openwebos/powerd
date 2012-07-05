@@ -710,5 +710,5 @@ void handle_charger_event(nyx_charger_event_t event)
 }
 
 
-INIT_FUNC(INIT_FUNC_END, ChargeStateInit);
+INIT_FUNC(INIT_FUNC_MIDDLE, ChargeStateInit);
 

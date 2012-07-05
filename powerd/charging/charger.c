@@ -344,4 +344,4 @@ error:
 	return 0;
 }
 
-INIT_FUNC(INIT_FUNC_END, ChargerInit);
+INIT_FUNC(INIT_FUNC_MIDDLE, ChargerInit);
