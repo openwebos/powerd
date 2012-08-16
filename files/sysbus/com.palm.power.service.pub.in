@@ -19,5 +19,5 @@
 
 [D-BUS Service]
 Name=com.palm.power
-Exec=/usr/sbin/powerd
+Exec=@WEBOS_INSTALL_SBINDIR@/powerd
 Type=static

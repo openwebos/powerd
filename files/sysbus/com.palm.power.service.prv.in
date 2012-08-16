@@ -16,13 +16,8 @@
 #
 # LICENSE@@@
 
-prefix=@CMAKE_INSTALL_PREFIX@
-exec_prefix=${prefix}
-libdir=${exec_prefix}/lib
-includedir=${prefix}/include/@POWERD_LIBRARY_NAME@
 
-Name: @POWERD_LIBRARY_NAME@
-Description: Powerd Library
-Version: @POWERD_LIBRARY_VERSION@
-Libs: -L${libdir} -l@POWERD_LIBRARY_NAME@
-Cflags: -I${includedir}
+[D-BUS Service]
+Name=com.palm.power
+Exec=@WEBOS_INSTALL_SBINDIR@/powerd
+Type=static

@@ -22,23 +22,15 @@
 
 # Build the powerd executable
 
-include_directories(../include/private ../include . ./utils ./alarms ./suspend)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}  ${CMAKE_CURRENT_SOURCE_DIR}/utils ${CMAKE_CURRENT_SOURCE_DIR}/alarms ${CMAKE_CURRENT_SOURCE_DIR}/suspend)
 
-# Check that we have nyx-lib
-pkg_check_modules(NYXLIB REQUIRED nyx)
-add_definitions(${NYXLIB_CFLAGS})
+file(GLOB SOURCE_FILES alarms/* charging/* suspend/* utils/* *.c)
+webos_configure_source_files(SOURCE_FILES config.c timesaver.c)
 
-aux_source_directory(alarms alarms_files)
-aux_source_directory(charging charging_files)
-aux_source_directory(suspend suspend_files)
-aux_source_directory(utils utils_files)
-
-add_executable(powerd ${alarms_files} ${charging_files} ${suspend_files} ${utils_files} main.c config.c com_palm_power_lunabus.c timesaver.c)
+add_executable(powerd ${SOURCE_FILES})
 target_link_libraries(powerd ${GLIB2_LDFLAGS} ${LUNASERVICE2_LDFLAGS} ${CJSON_LDFLAGS} ${NYXLIB_LDFLAGS} pthread rt)
 
-set_property(TARGET powerd PROPERTY INSTALL_RPATH_USE_LINK_PATH TRUE)
+webos_build_daemon()
+webos_build_system_bus_files()
 
-
-install(TARGETS powerd DESTINATION "sbin")
-install(FILES ./preferences/powerd.conf DESTINATION "${SYSCONFDIR_FULL}/default")
-install(PROGRAMS ./etc/event.d/powerd DESTINATION "${SYSCONFDIR_FULL}/event.d")
+install(FILES ../files/conf/powerd.conf DESTINATION ${WEBOS_INSTALL_DEFAULTCONFDIR})

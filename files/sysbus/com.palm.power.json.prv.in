@@ -1,6 +1,6 @@
 {
     "role": {
-        "exeName":"/usr/sbin/powerd",
+        "exeName":"@WEBOS_INSTALL_SBINDIR@/powerd",
         "type": "regular",
         "allowedNames": ["com.palm.power",""]
     },

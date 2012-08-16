@@ -22,22 +22,10 @@
 
 # Build the libpowerd shared library
 
-include_directories(../include/private ../include .)
+webos_build_pkgconfig()
 
-add_definitions("-fPIC -DSTACK_GROWS_DOWN")
+webos_add_compiler_flags(ALL -fPIC -DSTACK_GROWS_DOWN)
 
-# Can't use ${POWERD_LIBRARY_NAME} for target name since that's the name of the daemon.
 add_library(libpowerd SHARED clock.c commands.c init.c wait.c)
 target_link_libraries(libpowerd ${GLIB2_LDFLAGS} ${LUNASERVICE2_LDFLAGS} ${CJSON_LDFLAGS} pthread rt)
-
-
-set_target_properties(libpowerd PROPERTIES VERSION ${POWERD_LIBRARY_VERSION} SOVERSION ${POWERD_API_VERSION_MAJOR})
-set_target_properties(libpowerd PROPERTIES OUTPUT_NAME ${POWERD_LIBRARY_NAME})
-
-
-install(FILES ../include/powerd-glib.h ../include/powerd.h ../include/powerd-lunaservice.h DESTINATION "include/${POWERD_LIBRARY_NAME}")
-install(TARGETS libpowerd LIBRARY DESTINATION "lib${LIB_SUFFIX}/")
-
-configure_file(${POWERD_LIBRARY_NAME}.pc.in
-                ${PROJECT_BINARY_DIR}/libpowerd/${POWERD_LIBRARY_NAME}.pc @ONLY)
-install (FILES "${PROJECT_BINARY_DIR}/libpowerd/${POWERD_LIBRARY_NAME}.pc" DESTINATION "lib/pkgconfig")
+webos_build_library(NAME libpowerd)

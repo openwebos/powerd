@@ -29,9 +29,9 @@ stop on started start_update
 respawn
 
 pre-start script
-    CONF_DIR="/var/preferences/com.palm.power"
+    CONF_DIR="@WEBOS_INSTALL_LOCALSTATEDIR@/preferences/com.palm.power"
     CONF_FILE="${CONF_DIR}/powerd.conf"
-    DEFAULT_CONF_FILE="/etc/default/powerd.conf"
+    DEFAULT_CONF_FILE="@WEBOS_INSTALL_DEFAULTCONFDIR@/powerd.conf"
     TMP_FILE="${CONF_DIR}/powerd.tmp"
     if [ ! -f ${CONF_FILE} ]; then
         mkdir -p ${CONF_DIR} || true
@@ -47,7 +47,7 @@ end script
 #console output
 
 script
-		if grep -qs "top" /proc/cmdline || grep -qs "opal" /proc/cmdline || grep -qs "sapp" /proc/cmdline ; then
+		if grep -qs "top" /proc/cmdline ; then
 			# "Configure PM subsystem"
 			# The WFI mode sould be on by default and the following writes can by bypassed.
 			echo 1 > /sys/module/pm_8x60/modes/cpu0/wfi/idle_enabled
@@ -75,26 +75,5 @@ script
 			
 		fi
 
-        if grep -qs "qemux86" /etc/hostname ; then
-                # For emulator, provide battery status through
-                # fake sysfs entries
-                mkdir -p /tmp/powerd/fake/battery/32-00084048a7c8
-                cd /tmp/powerd/fake/battery/32-00084048a7c8
-                echo 99.21875 > getage
-                echo 85703 > getavgcurrent
-                echo 1140.875 > getcapacity
-                echo 748.800 > getcoulomb
-                echo 85703 > getcurrent
-                echo 1150.000 > getfull40
-                echo 66 > getpercent
-                echo 761.250 > getrawcoulomb
-                echo 20 > getrsense
-                echo 38 > gettemp
-                echo 3928400 > getvoltage
-                echo 32-00084048a7c8 > ../w1_master_slaves
-                echo 0 > ../w1_master_search
-                cd /tmp/powerd
-                exec /usr/sbin/powerd -b
-        fi
-        exec /usr/sbin/powerd
+        exec @WEBOS_INSTALL_LOCALSTATEDIR@/powerd
 end script

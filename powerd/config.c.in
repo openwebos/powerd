@@ -55,7 +55,7 @@ chargeConfig_t gChargeConfig =
     .disable_overcharge_check = false,
     .skip_battery_authentication = false,
     
-    .preference_dir = "/var/preferences/com.palm.power",
+    .preference_dir = "@WEBOS_INSTALL_LOCALSTATEDIR@/preferences/com.palm.power",
 
     .fasthalt = 0, 
     .maxtemp = 0, // defaults in batterypoll.c
