@@ -34,7 +34,7 @@ aux_source_directory(suspend suspend_files)
 aux_source_directory(utils utils_files)
 
 add_executable(powerd ${alarms_files} ${charging_files} ${suspend_files} ${utils_files} main.c config.c com_palm_power_lunabus.c timesaver.c)
-target_link_libraries(powerd ${GLIB2_LDFLAGS} ${LUNASERVICE2_LDFLAGS} ${CJSON_LDFLAGS} ${NYXLIB_LDFLAGS})
+target_link_libraries(powerd ${GLIB2_LDFLAGS} ${LUNASERVICE2_LDFLAGS} ${CJSON_LDFLAGS} ${NYXLIB_LDFLAGS} pthread rt)
 
 set_property(TARGET powerd PROPERTY INSTALL_RPATH_USE_LINK_PATH TRUE)
 
