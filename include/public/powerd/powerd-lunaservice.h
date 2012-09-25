@@ -20,8 +20,8 @@
 #ifndef _POWERD_LUNASERVICE_H_
 #define _POWERD_LUNASERVICE_H_
 
-#include <lunaservice.h>
 #include <glib.h>
+#include <luna-service2/lunaservice.h>
 
 #ifdef __cplusplus
 extern "C" {

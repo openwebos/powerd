@@ -36,7 +36,7 @@
 #include <errno.h>
 #include <string.h>
 #include <unistd.h>
-#include <lunaservice.h>
+#include <luna-service2/lunaservice.h>
 
 #include "config.h"
 #include "init.h"

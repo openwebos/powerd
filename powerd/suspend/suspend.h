@@ -17,7 +17,7 @@
 * LICENSE@@@ */
 
 
-#include <lunaservice.h>
+#include <luna-service2/lunaservice.h>
 /** 
  * @brief If from batterycheck, the reason why we woke up.
  */

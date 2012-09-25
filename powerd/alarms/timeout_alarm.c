@@ -28,7 +28,6 @@
  *
  */
 
-#include <lunaservice.h>
 #include <glib.h>
 #include <stdlib.h>
 #include <string.h>
@@ -36,6 +35,7 @@
 #include <cjson/json.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <luna-service2/lunaservice.h>
 
 #include "main.h"
 

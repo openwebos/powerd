@@ -25,7 +25,7 @@
  * Main header for all orphan functions.
  */
 
-#include <lunaservice.h>
+#include <luna-service2/lunaservice.h>
 
 GMainContext * GetMainLoopContext(void);
 

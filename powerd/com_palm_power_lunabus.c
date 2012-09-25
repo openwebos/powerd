@@ -23,7 +23,7 @@
  * @brief Register lunabus methods and signals for powerd.
  */
 
-#include <lunaservice.h>
+#include <luna-service2/lunaservice.h>
 #include "main.h"
 #include "init.h"
 

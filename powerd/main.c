@@ -26,7 +26,7 @@
 #include <getopt.h>
 #include <stdlib.h>
 
-#include <lunaservice.h>
+#include <luna-service2/lunaservice.h>
 
 #include "init.h"
 #include "debug.h"

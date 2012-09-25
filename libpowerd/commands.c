@@ -25,15 +25,13 @@
 
 #include <stdbool.h>
 #include <stdint.h>
-#include <lunaservice.h>
 #include <pthread.h>
 #include <string.h>
 #include <assert.h>
-
 #include <cjson/json.h>
+#include <luna-service2/lunaservice.h>
 
 #include "powerd.h"
-
 #include "init.h"
 
 #define POWERD_IPC_NAME "com.palm.power"
