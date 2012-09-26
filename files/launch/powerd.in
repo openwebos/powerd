@@ -75,5 +75,5 @@ script
 			
 		fi
 
-        exec @WEBOS_INSTALL_LOCALSTATEDIR@/powerd
+        exec @WEBOS_INSTALL_SBINDIR@/powerd
 end script
