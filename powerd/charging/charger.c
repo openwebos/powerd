@@ -29,6 +29,7 @@
 #include <syslog.h>
 #include <stdbool.h>
 #include <unistd.h>
+#include <glib.h>
 #include <cjson/json.h>
 #include <luna-service2/lunaservice.h>
 

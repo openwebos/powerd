@@ -37,6 +37,7 @@
 #endif
 
 #include <syslog.h>
+#include <glib.h>
 #include <cjson/json.h>
 
 #include "wait.h"

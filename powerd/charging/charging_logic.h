@@ -16,6 +16,7 @@
 *
 * LICENSE@@@ */
 
+#include <glib.h>
 
 #include "charger.h"
 #include "battery.h"
