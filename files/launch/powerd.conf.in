@@ -23,6 +23,9 @@ stop on started start_update
 
 respawn
 
+# Comment this line out to suppress logs on the console
+#console output
+
 pre-start script
 	CONF_DIR="@WEBOS_INSTALL_LOCALSTATEDIR@/preferences/com.palm.power"
 	CONF_FILE="${CONF_DIR}/powerd.conf"
@@ -39,9 +42,4 @@ pre-start script
 	fi
 end script
 
-# Comment this line out to suppress logs on the console
-#console output
-
-script
-	@WEBOS_INSTALL_SBINDIR@/powerd
-end script
+exec @WEBOS_INSTALL_SBINDIR@/powerd
