@@ -27,6 +27,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/un.h>
+#include <unistd.h>
 
 #include <errno.h>
 #include <glib.h>
@@ -123,6 +124,7 @@ UEventListen(const char *ueventPath, UEventChangeFunc func)
     if (bind(s, (struct sockaddr *)&addr, len) < 0)
     {
         g_critical("Could not bind to socket: %s\n", strerror(errno));
+        close(s);
         return -1;
     }
 

@@ -341,6 +341,8 @@ lserror:
 error:
 	g_critical("Powerd: No charger device found\n");
 	gChargeConfig.skip_battery_check = 1;
+	if(iteraror)
+		free(iteraror);
 //	abort();
 	return 0;
 }

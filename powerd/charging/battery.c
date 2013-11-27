@@ -462,6 +462,8 @@ lserror:
 error:
 	g_critical("Powerd: No battery device found\n");
 	battDev = NULL;
+	if(iteraror)
+		free(iteraror);
 //	abort();
 	return 0;
 }

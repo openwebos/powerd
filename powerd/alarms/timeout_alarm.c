@@ -195,10 +195,6 @@ static bool
 alarmAddCalendar(LSHandle *sh, LSMessage *message, void *ctx)
 {
 	struct json_object *object=NULL;
-	struct context *alrm_ctx=NULL;
-	alrm_ctx = malloc(sizeof(struct context));
-	if(!alrm_ctx) goto error;
-	memset(alrm_ctx,0,sizeof(struct context));
 
 	object = json_tokener_parse(LSMessageGetPayload(message));
 	if ( is_error(object) )
@@ -213,6 +209,11 @@ alarmAddCalendar(LSHandle *sh, LSMessage *message, void *ctx)
 
 	LSMessageRef(message);
 	if(subscribe) {
+		struct context *alrm_ctx=NULL;
+		alrm_ctx = malloc(sizeof(struct context));
+		if(!alrm_ctx) goto error;
+		memset(alrm_ctx,0,sizeof(struct context));
+
 		alrm_ctx->replyMessage = message;
 		LSCall(GetLunaServiceHandle(), "palm://com.palm.sleep/time/alarmAddCalender",
 					LSMessageGetPayload(message), alarms_timeout_subscribe_cb, (void *)alrm_ctx, NULL, NULL);
@@ -243,10 +244,6 @@ static bool
 alarmAdd(LSHandle *sh, LSMessage *message, void *ctx)
 {
 	struct json_object *object = NULL;
-	struct context *alrm_ctx = NULL;
-	alrm_ctx = malloc(sizeof(struct context));
-	if(!alrm_ctx) goto error;
-	memset(alrm_ctx,0,sizeof(struct context));
 
 	object = json_tokener_parse(LSMessageGetPayload(message));
 	if ( is_error(object) )
@@ -261,6 +258,11 @@ alarmAdd(LSHandle *sh, LSMessage *message, void *ctx)
 
 	LSMessageRef(message);
 	if(subscribe) {
+		struct context *alrm_ctx = NULL;
+		alrm_ctx = malloc(sizeof(struct context));
+		if(!alrm_ctx) goto error;
+		memset(alrm_ctx,0,sizeof(struct context));
+
 		alrm_ctx->replyMessage = message;
 		LSCall(GetLunaServiceHandle(), "palm://com.palm.sleep/time/alarmAdd",
 					LSMessageGetPayload(message), alarms_timeout_subscribe_cb, (void *)alrm_ctx, NULL, NULL);
