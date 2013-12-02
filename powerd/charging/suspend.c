@@ -171,7 +171,9 @@ bool resumeSignal(LSHandle *sh,
 		_ParseWakeupSources(resumetype);
 	}
 out:
-    return true;
+	if (!is_error(object)) json_object_put(object);
+
+	return true;
 }
 
 bool suspendedSignal(LSHandle *sh,
@@ -192,7 +194,8 @@ bool suspendedSignal(LSHandle *sh,
 
 out:
 	if (!is_error(object)) json_object_put(object);
-    return true;
+
+	return true;
 }
 
 

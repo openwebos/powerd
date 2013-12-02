@@ -95,8 +95,8 @@ static bool
 initiateShutdown(LSHandle *sh, LSMessage *message, void *user_data)
 {
     LSMessageRef(message);
-    LSCall(GetLunaServiceHandle(), SLEEPD_SHUTDOWN_SERVICE"initiate",
-	       		LSMessageGetPayload(message), shutdown_method_cb,(void *)message, NULL, NULL);
+    LSCallOneReply(GetLunaServiceHandle(), SLEEPD_SHUTDOWN_SERVICE"initiate",
+                   LSMessageGetPayload(message), shutdown_method_cb,(void *)message, NULL, NULL);
     return true;
 
 }
@@ -110,8 +110,8 @@ static bool
 TESTresetShutdownState(LSHandle *sh, LSMessage *message, void *user_data)
 {
     LSMessageRef(message);
-    LSCall(GetLunaServiceHandle(), SLEEPD_SHUTDOWN_SERVICE"TESTresetShutdownState",
-	       		LSMessageGetPayload(message), shutdown_method_cb,(void *)message, NULL, NULL);
+    LSCallOneReply(GetLunaServiceHandle(), SLEEPD_SHUTDOWN_SERVICE"TESTresetShutdownState",
+                   LSMessageGetPayload(message), shutdown_method_cb,(void *)message, NULL, NULL);
     return true;
 }
 
@@ -124,8 +124,8 @@ shutdownApplicationsAck(LSHandle *sh, LSMessage *message,
                              void *user_data)
 {
     LSMessageRef(message);
-    LSCall(GetLunaServiceHandle(), SLEEPD_SHUTDOWN_SERVICE"shutdownApplicationsAck",
-	       		LSMessageGetPayload(message), shutdown_method_cb,(void *)message, NULL, NULL);
+    LSCallOneReply(GetLunaServiceHandle(), SLEEPD_SHUTDOWN_SERVICE"shutdownApplicationsAck",
+                   LSMessageGetPayload(message), shutdown_method_cb,(void *)message, NULL, NULL);
     return true;
 }
 
@@ -136,10 +136,10 @@ static bool
 shutdownServicesAck(LSHandle *sh, LSMessage *message,
                              void *user_data)
 {
-	LSMessageRef(message);
-	LSCall(GetLunaServiceHandle(), SLEEPD_SHUTDOWN_SERVICE"shutdownServicesAck",
-		       		LSMessageGetPayload(message), shutdown_method_cb,(void *)message, NULL, NULL);
-	return true;
+    LSMessageRef(message);
+    LSCallOneReply(GetLunaServiceHandle(), SLEEPD_SHUTDOWN_SERVICE"shutdownServicesAck",
+                   LSMessageGetPayload(message), shutdown_method_cb,(void *)message, NULL, NULL);
+    return true;
 }
 
 
@@ -150,21 +150,21 @@ static bool
 shutdownApplicationsRegister(LSHandle *sh, LSMessage *message,
                              void *user_data)
 {
-	 LSMessageRef(message);
-	 LSCall(GetLunaServiceHandle(), SLEEPD_SHUTDOWN_SERVICE"shutdownApplicationsRegister",
-		       		LSMessageGetPayload(message), shutdown_method_cb,(void *)message, NULL, NULL);
-	 bool retVal;
-	 LSError lserror;
-	 LSErrorInit(&lserror);
+     LSMessageRef(message);
+     LSCallOneReply(GetLunaServiceHandle(), SLEEPD_SHUTDOWN_SERVICE"shutdownApplicationsRegister",
+                    LSMessageGetPayload(message), shutdown_method_cb,(void *)message, NULL, NULL);
+     bool retVal;
+     LSError lserror;
+     LSErrorInit(&lserror);
 
-	 retVal = LSSubscriptionAdd(sh, "shutdownClient", message, &lserror);
-	 if (!retVal)
-	 {
-		 g_critical("LSSubscriptionAdd failed.");
-		 LSErrorPrint(&lserror, stderr);
-		 LSErrorFree(&lserror);
-	 }
-	 return true;
+     retVal = LSSubscriptionAdd(sh, "shutdownClient", message, &lserror);
+     if (!retVal)
+     {
+         g_critical("LSSubscriptionAdd failed.");
+         LSErrorPrint(&lserror, stderr);
+         LSErrorFree(&lserror);
+     }
+     return true;
 }
 
 /**
@@ -175,9 +175,9 @@ static bool
 shutdownServicesRegister(LSHandle *sh, LSMessage *message,
                              void *user_data)
 {
-	LSMessageRef(message);
-	LSCall(GetLunaServiceHandle(), SLEEPD_SHUTDOWN_SERVICE"shutdownServicesRegister",
-			       		LSMessageGetPayload(message), shutdown_method_cb,(void *)message, NULL, NULL);
+    LSMessageRef(message);
+    LSCallOneReply(GetLunaServiceHandle(), SLEEPD_SHUTDOWN_SERVICE"shutdownServicesRegister",
+                   LSMessageGetPayload(message), shutdown_method_cb,(void *)message, NULL, NULL);
     bool retVal;
     LSError lserror;
     LSErrorInit(&lserror);
@@ -189,7 +189,7 @@ shutdownServicesRegister(LSHandle *sh, LSMessage *message,
         LSErrorPrint(&lserror, stderr);
         LSErrorFree(&lserror);
     }
-	return true;
+    return true;
 }
 
 /**
@@ -199,10 +199,10 @@ static bool
 machineOff(LSHandle *sh, LSMessage *message,
                              void *user_data)
 {
-	LSMessageRef(message);
-	LSCall(GetLunaServiceHandle(), SLEEPD_SHUTDOWN_SERVICE"machineOff",
-			       		LSMessageGetPayload(message), shutdown_method_cb,(void *)message, NULL, NULL);
-	return true;
+    LSMessageRef(message);
+    LSCallOneReply(GetLunaServiceHandle(), SLEEPD_SHUTDOWN_SERVICE"machineOff",
+                   LSMessageGetPayload(message), shutdown_method_cb,(void *)message, NULL, NULL);
+    return true;
 }
 
 /**
@@ -213,10 +213,10 @@ static bool
 machineReboot(LSHandle *sh, LSMessage *message,
                              void *user_data)
 {
-	LSMessageRef(message);
-	LSCall(GetLunaServiceHandle(), SLEEPD_SHUTDOWN_SERVICE"machineReboot",
-			       		LSMessageGetPayload(message), shutdown_method_cb,(void *)message, NULL, NULL);
-	return true;
+    LSMessageRef(message);
+    LSCallOneReply(GetLunaServiceHandle(), SLEEPD_SHUTDOWN_SERVICE"machineReboot",
+                   LSMessageGetPayload(message), shutdown_method_cb,(void *)message, NULL, NULL);
+    return true;
 }
 
 LSMethod shutdown_methods[] = {

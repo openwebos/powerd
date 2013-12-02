@@ -101,6 +101,8 @@ main(int argc, char **argv)
         exit(1);
     }
 
+    g_option_context_free (ctx);
+
     // FIXME integrate this into TheOneInit()
     LOGInit();
     LOGSetHandler(LOGSyslog);

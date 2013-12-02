@@ -105,6 +105,7 @@ struct context
 {
 	LSMessage *replyMessage;
 	int count;
+	LSMessageToken call_token;
 };
 
 /**
@@ -122,11 +123,10 @@ alarms_timeout_subscribe_cb(LSHandle *sh, LSMessage *message, void *ctx)
 	bool retVal;
 	struct context *alrm_ctx= (struct context *)ctx;
 	const char *payload = LSMessageGetPayload(message);
-    struct json_object *object = json_tokener_parse(payload);
-    bool fired = json_object_get_boolean(
-    		json_object_object_get(object, "fired"));
+	struct json_object *object = json_tokener_parse(payload);
+	bool fired = json_object_get_boolean(json_object_object_get(object, "fired"));
 
-    POWERDLOG(LOG_INFO,"%s: response with payload %s, count : %d", __FUNCTION__, payload,alrm_ctx->count);
+	POWERDLOG(LOG_INFO,"%s: response with payload %s, count : %d", __FUNCTION__, payload, alrm_ctx->count);
 
 	if(alrm_ctx->replyMessage)
 	{
@@ -152,6 +152,10 @@ alarms_timeout_subscribe_cb(LSHandle *sh, LSMessage *message, void *ctx)
 		POWERDLOG(LOG_CRIT,"%s: replyMessage is NULL",__func__);
 
 	if(alrm_ctx->count == 2) {
+		if(!LSCallCancel(sh, alrm_ctx->call_token, NULL))
+		{
+			POWERDLOG(LOG_WARNING, "%s could not cancel luna-service alarm call.", __FUNCTION__);
+		}
 		LSMessageUnref(alrm_ctx->replyMessage);
 		free(alrm_ctx);
 	}
@@ -216,10 +220,10 @@ alarmAddCalendar(LSHandle *sh, LSMessage *message, void *ctx)
 
 		alrm_ctx->replyMessage = message;
 		LSCall(GetLunaServiceHandle(), "palm://com.palm.sleep/time/alarmAddCalender",
-					LSMessageGetPayload(message), alarms_timeout_subscribe_cb, (void *)alrm_ctx, NULL, NULL);
+					LSMessageGetPayload(message), alarms_timeout_subscribe_cb, (void *)alrm_ctx, &alrm_ctx->call_token, NULL);
 	}
 	else
-		LSCall(GetLunaServiceHandle(), "palm://com.palm.sleep/time/alarmAddCalender",
+		LSCallOneReply(GetLunaServiceHandle(), "palm://com.palm.sleep/time/alarmAddCalender",
 			LSMessageGetPayload(message), alarms_timeout_cb, (void *)message, NULL, NULL);
 
 	goto cleanup;
@@ -265,10 +269,10 @@ alarmAdd(LSHandle *sh, LSMessage *message, void *ctx)
 
 		alrm_ctx->replyMessage = message;
 		LSCall(GetLunaServiceHandle(), "palm://com.palm.sleep/time/alarmAdd",
-					LSMessageGetPayload(message), alarms_timeout_subscribe_cb, (void *)alrm_ctx, NULL, NULL);
+					LSMessageGetPayload(message), alarms_timeout_subscribe_cb, (void *)alrm_ctx, &alrm_ctx->call_token, NULL);
 	}
 	else
-		LSCall(GetLunaServiceHandle(), "palm://com.palm.sleep/time/alarmAdd",
+		LSCallOneReply(GetLunaServiceHandle(), "palm://com.palm.sleep/time/alarmAdd",
 			LSMessageGetPayload(message), alarms_timeout_cb, (void *)message, NULL, NULL);
 
 	goto cleanup;

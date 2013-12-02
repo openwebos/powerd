@@ -104,9 +104,9 @@ suspend_ipc_method_cb(LSHandle *sh, LSMessage *message, void *ctx)
 static bool
 clientCancel(LSHandle *sh, LSMessage *message, void *ctx)
 {
-    LSCall(GetLunaServiceHandle(), SLEEPD_SUSPEND_SERVICE"clientCancelByName",
-	       		LSMessageGetPayload(message), NULL,(void *)message, NULL, NULL);
-    return true;
+	LSCallOneReply(GetLunaServiceHandle(), SLEEPD_SUSPEND_SERVICE"clientCancelByName",
+	               LSMessageGetPayload(message), NULL,(void *)message, NULL, NULL);
+	return true;
 }
 
 /**
@@ -116,8 +116,8 @@ bool
 activityStartCallback(LSHandle *sh, LSMessage *message, void *user_data)
 {
 	LSMessageRef(message);
-	LSCall(GetLunaServiceHandle(), SLEEPD_SUSPEND_SERVICE"activityStart",
-					       		LSMessageGetPayload(message), suspend_ipc_method_cb,(void *)message, NULL, NULL);
+	LSCallOneReply(GetLunaServiceHandle(), SLEEPD_SUSPEND_SERVICE"activityStart",
+	               LSMessageGetPayload(message), suspend_ipc_method_cb,(void *)message, NULL, NULL);
 	return true;
 }
 
@@ -129,8 +129,8 @@ bool
 activityEndCallback(LSHandle *sh, LSMessage *message, void *user_data)
 {
 	LSMessageRef(message);
-	LSCall(GetLunaServiceHandle(), SLEEPD_SUSPEND_SERVICE"activityEnd",
-					       		LSMessageGetPayload(message), suspend_ipc_method_cb,(void *)message, NULL, NULL);
+	LSCallOneReply(GetLunaServiceHandle(), SLEEPD_SUSPEND_SERVICE"activityEnd",
+	               LSMessageGetPayload(message), suspend_ipc_method_cb,(void *)message, NULL, NULL);
 	return true;
 }
 
@@ -142,8 +142,8 @@ bool
 identifyCallback(LSHandle *sh, LSMessage *message, void *data)
 {
 	LSMessageRef(message);
-	LSCall(GetLunaServiceHandle(), SLEEPD_SUSPEND_SERVICE"identify",
-					       		LSMessageGetPayload(message), suspend_ipc_method_cb,(void *)message, NULL, NULL);
+	LSCallOneReply(GetLunaServiceHandle(), SLEEPD_SUSPEND_SERVICE"identify",
+	               LSMessageGetPayload(message), suspend_ipc_method_cb,(void *)message, NULL, NULL);
 
 	struct json_object *object = json_tokener_parse(LSMessageGetPayload(message));
 	if ( is_error(object) ) {
@@ -157,6 +157,8 @@ identifyCallback(LSHandle *sh, LSMessage *message, void *data)
 		LSSubscriptionAdd(sh, "PowerdClients", message, NULL);
 	}
 out:
+	if (!is_error(object)) json_object_put(object);
+
 	return true;
 }
 
@@ -167,8 +169,8 @@ bool
 forceSuspendCallback(LSHandle *sh, LSMessage *message, void *user_data)
 {
 	LSMessageRef(message);
-	LSCall(GetLunaServiceHandle(), SLEEPD_SUSPEND_SERVICE"forceSuspend",
-					       		LSMessageGetPayload(message), suspend_ipc_method_cb,(void *)message, NULL, NULL);
+	LSCallOneReply(GetLunaServiceHandle(), SLEEPD_SUSPEND_SERVICE"forceSuspend",
+	               LSMessageGetPayload(message), suspend_ipc_method_cb,(void *)message, NULL, NULL);
 	return true;
 }
 
@@ -179,8 +181,8 @@ bool
 TESTSuspendCallback(LSHandle *sh, LSMessage *message, void *user_data)
 {
 	LSMessageRef(message);
-	LSCall(GetLunaServiceHandle(), SLEEPD_SUSPEND_SERVICE"TESTSuspend",
-					       		LSMessageGetPayload(message), suspend_ipc_method_cb,(void *)message, NULL, NULL);
+	LSCallOneReply(GetLunaServiceHandle(), SLEEPD_SUSPEND_SERVICE"TESTSuspend",
+	               LSMessageGetPayload(message), suspend_ipc_method_cb,(void *)message, NULL, NULL);
 	return true;
 }
 
@@ -192,8 +194,8 @@ bool
 suspendRequestRegister(LSHandle *sh, LSMessage *message, void *data)
 {
 	LSMessageRef(message);
-	LSCall(GetLunaServiceHandle(), SLEEPD_SUSPEND_SERVICE"suspendRequestRegister",
-					       		LSMessageGetPayload(message), suspend_ipc_method_cb,(void *)message, NULL, NULL);
+	LSCallOneReply(GetLunaServiceHandle(), SLEEPD_SUSPEND_SERVICE"suspendRequestRegister",
+	               LSMessageGetPayload(message), suspend_ipc_method_cb,(void *)message, NULL, NULL);
 	return true;
 }
 
@@ -204,8 +206,8 @@ bool
 suspendRequestAck(LSHandle *sh, LSMessage *message, void *data)
 {
 	LSMessageRef(message);
-	LSCall(GetLunaServiceHandle(), SLEEPD_SUSPEND_SERVICE"suspendRequestAck",
-					       		LSMessageGetPayload(message), suspend_ipc_method_cb,(void *)message, NULL, NULL);
+	LSCallOneReply(GetLunaServiceHandle(), SLEEPD_SUSPEND_SERVICE"suspendRequestAck",
+	               LSMessageGetPayload(message), suspend_ipc_method_cb,(void *)message, NULL, NULL);
 	return true;
 }
 
@@ -217,8 +219,8 @@ bool
 prepareSuspendRegister(LSHandle *sh, LSMessage *message, void *data)
 {
 	LSMessageRef(message);
-	LSCall(GetLunaServiceHandle(), SLEEPD_SUSPEND_SERVICE"prepareSuspendRegister",
-					       		LSMessageGetPayload(message), suspend_ipc_method_cb,(void *)message, NULL, NULL);
+	LSCallOneReply(GetLunaServiceHandle(), SLEEPD_SUSPEND_SERVICE"prepareSuspendRegister",
+	               LSMessageGetPayload(message), suspend_ipc_method_cb,(void *)message, NULL, NULL);
 	return true;
 }
 
@@ -230,8 +232,8 @@ bool
 prepareSuspendAck(LSHandle *sh, LSMessage *message, void *data)
 {
 	LSMessageRef(message);
-	LSCall(GetLunaServiceHandle(), SLEEPD_SUSPEND_SERVICE"prepareSuspendAck",
-					       		LSMessageGetPayload(message), suspend_ipc_method_cb,(void *)message, NULL, NULL);
+	LSCallOneReply(GetLunaServiceHandle(), SLEEPD_SUSPEND_SERVICE"prepareSuspendAck",
+	               LSMessageGetPayload(message), suspend_ipc_method_cb,(void *)message, NULL, NULL);
 	return true;
 }
 
@@ -244,8 +246,9 @@ bool
 visualLedSuspendCallback(LSHandle *sh, LSMessage *message, void *data)
 {
 	LSMessageRef(message);
-	LSCall(GetLunaServiceHandle(), SLEEPD_SUSPEND_SERVICE"visualLedSuspend",
-				       		LSMessageGetPayload(message), suspend_ipc_method_cb,(void *)message, NULL, NULL);
+	LSCallOneReply(GetLunaServiceHandle(), SLEEPD_SUSPEND_SERVICE"visualLedSuspend",
+	               LSMessageGetPayload(message), suspend_ipc_method_cb,(void *)message, NULL, NULL);
+
 	return true;
 }
 
