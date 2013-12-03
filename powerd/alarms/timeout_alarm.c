@@ -121,10 +121,19 @@ static bool
 alarms_timeout_subscribe_cb(LSHandle *sh, LSMessage *message, void *ctx)
 {
 	bool retVal;
-	struct context *alrm_ctx= (struct context *)ctx;
+	bool fired = false;
+	struct context *alrm_ctx = (struct context *)ctx;
+
 	const char *payload = LSMessageGetPayload(message);
 	struct json_object *object = json_tokener_parse(payload);
-	bool fired = json_object_get_boolean(json_object_object_get(object, "fired"));
+	if (is_error(object))
+	{
+		POWERDLOG(LOG_CRIT,"%s: invalid json from sleep daemon",__func__);
+	}
+	else
+	{
+		fired = json_object_get_boolean(json_object_object_get(object, "fired"));
+	}
 
 	POWERDLOG(LOG_INFO,"%s: response with payload %s, count : %d", __FUNCTION__, payload, alrm_ctx->count);
 
@@ -132,7 +141,7 @@ alarms_timeout_subscribe_cb(LSHandle *sh, LSMessage *message, void *ctx)
 	{
 		if(fired)
 		{
-			retVal = LSMessageReply(GetLunaServiceHandle(),alrm_ctx->replyMessage, payload, NULL);
+			retVal = LSMessageReply(GetLunaServiceHandle(), alrm_ctx->replyMessage, payload, NULL);
 			if (!retVal)
 			{
 				POWERDLOG(LOG_WARNING, "%s could not send reply.", __FUNCTION__);
@@ -160,6 +169,8 @@ alarms_timeout_subscribe_cb(LSHandle *sh, LSMessage *message, void *ctx)
 		free(alrm_ctx);
 	}
 
+	if (!is_error(object)) json_object_put(object);
+
     return true;
 }
 
@@ -174,7 +185,6 @@ _power_timeout_set(LSHandle *sh, LSMessage *message, void *ctx)
        		LSMessageGetPayload(message), alarms_timeout_cb,(void *)message, NULL, NULL);
 
     return true;
-
 }
 
 /**

@@ -126,7 +126,7 @@ timesaver_save()
     //  to ensure file integrity with power cut or battery pull.
 
     int file = open(time_db_tmp, O_CREAT | O_WRONLY, S_IRWXU | S_IRGRP | S_IROTH);
-    if (file <= 0)
+    if (file < 0)
     {
         g_warning("%s: Could not save time to \"%s\"", __FUNCTION__, time_db_tmp);
         goto cleanup;

@@ -152,11 +152,10 @@ done:
 bool resumeSignal(LSHandle *sh,
                    LSMessage *message, void *user_data)
 {
-	struct json_object *object;
 	int resumetype;
 
-	object = json_tokener_parse(LSMessageGetPayload(message));
-	if (NULL == object) goto out;
+	struct json_object *object = json_tokener_parse(LSMessageGetPayload(message));
+	if (is_error(object)) goto out;
 
 	bool registration = json_object_get_boolean(
 						 json_object_object_get(object, "returnValue"));
@@ -179,10 +178,8 @@ out:
 bool suspendedSignal(LSHandle *sh,
                    LSMessage *message, void *user_data)
 {
-	struct json_object *object;
-
-	object = json_tokener_parse(LSMessageGetPayload(message));
-	if (NULL == object) goto out;
+	struct json_object *object = json_tokener_parse(LSMessageGetPayload(message));
+	if (is_error(object)) goto out;
 
 	bool registration = json_object_get_boolean(
 						 json_object_object_get(object, "returnValue"));
